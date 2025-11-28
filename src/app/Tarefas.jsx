@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -17,21 +17,23 @@ import Btn from "../components/Btn";
 
 export default function App() {
   const [useDark, setDark] = useState(false)
+
   const [useTask, setTask] = useState([
     { id: 1, desc: "estudar react native", status: "pendente" },
-    { id: 2, desc: "estudar js", status: "emAndamento" },
-    { id: 3, desc: "estudar react native", status: "emAndamento" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
-    { id: 4, desc: "estudar react native", status: "concluido" },
   ])
   const [modalVisible, setmodalVisible] = useState(false)
   const [statusTodo, setStatusTodo] = useState("pendente")
+  const [useNewTask, setNewTask] = useState("")
+
+  function addTask() {
+    setTask([...useTask, {
+      id: 2,
+      desc: useNewTask,
+      status: statusTodo
+    }])
+    setmodalVisible(false)
+    setNewTask("")
+  }
 
   const getStatus = () => {
     const total = useTask.length
@@ -50,6 +52,7 @@ export default function App() {
     {
       bg: "#0a0a0a",
       iconColor: "#ff6b00",
+      text: "#fff",
       cardSecondary: "#252525",
       succes: "#10b981",
       warning: "#f59e0b",
@@ -114,6 +117,7 @@ export default function App() {
 
   const closeModal = () => {
     setmodalVisible(false)
+    setNewTask("")
   }
 
   const openModal = () => {
@@ -286,6 +290,8 @@ export default function App() {
             <View style={styles.modalBody}>
               <Text style={[styles.label, { color: colors.text }]}>Titulo</Text>
               <Campo
+                valor={useNewTask}
+                onText={setNewTask}
                 st="campo"
                 title="Digite o titlo da tarefa..."
               />
@@ -353,9 +359,8 @@ export default function App() {
             </View>
 
             <View style={styles.modalFooter}>
-              <Btn title="cancelar" variant="outline" />
-              <Btn title="cancelar" variant="secondary" />
-              <Btn title="Adicoinar" />
+              <Btn nav={closeModal} title="Cancelar" variant="outline" />
+              <Btn nav={addTask} title="Adicoinar" />
             </View>
           </View>
         </View>
@@ -508,6 +513,11 @@ const styles = StyleSheet.create({
   statusButtonText: {
     fontSize: 13,
     fontWeight: "600"
+  },
+  modalFooter: {
+    flex: 1,
+    flexDirection: "row",
+    gap: 8
   }
 
 })
